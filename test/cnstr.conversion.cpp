@@ -32,9 +32,9 @@ TEST_CASE("variant<Ts...>::variant(T&&)", "[variant.cnstr]")
 #if EGGS_CXX11_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(Constexpr(42));
+        constexpr eggs::variant<int, Constexpr> v(Constexpr(42));
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
-        constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();
     }
 #endif
@@ -62,7 +62,8 @@ TEST_CASE("variant<Ts...>::variant(nullvariant_t)", "[variant.cnstr]")
 #if EGGS_CXX11_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(nullvariant);
+        constexpr eggs::variant<int, Constexpr> v(nullvariant);
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();
@@ -82,7 +83,8 @@ TEST_CASE("variant<>::variant(nullvariant_t)", "[variant.cnstr]")
 #if EGGS_CXX11_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(nullvariant);
+        constexpr eggs::variant<int, Constexpr> v(nullvariant);
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();

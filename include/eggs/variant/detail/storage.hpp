@@ -189,25 +189,8 @@ namespace eggs { namespace variants { namespace detail
           : base_type(which, std::forward<Args>(args)...)
         {}
 
-        template <
-            std::size_t I
-          , typename T = typename at_index<I, pack<Ts...>>::type
-        >
-        EGGS_CXX14_CONSTEXPR T& get() EGGS_CXX11_NOEXCEPT
-        {
-            return base_type::get(std::integral_constant<std::size_t, I>{});
-        }
-
-        template <
-            std::size_t I
-          , typename T = typename at_index<I, pack<Ts...>>::type
-        >
-        EGGS_CXX11_CONSTEXPR T const& get() const EGGS_CXX11_NOEXCEPT
-        {
-            return base_type::get(std::integral_constant<std::size_t, I>{});
-        }
-
         using base_type::target;
+        using base_type::get;
     };
 #else
     ///////////////////////////////////////////////////////////////////////////
@@ -352,7 +335,8 @@ namespace eggs { namespace variants { namespace detail
             std::size_t I
           , typename T = typename at_index<I, pack<Ts...>>::type
         >
-        T& get() EGGS_CXX11_NOEXCEPT
+        T& get(
+            std::integral_constant<std::size_t, I> which) EGGS_CXX11_NOEXCEPT
         {
             return *static_cast<T*>(target());
         }
@@ -361,7 +345,8 @@ namespace eggs { namespace variants { namespace detail
             std::size_t I
           , typename T = typename at_index<I, pack<Ts...>>::type
         >
-        T const& get() const EGGS_CXX11_NOEXCEPT
+        T const& get(
+            std::integral_constant<std::size_t, I> which) const EGGS_CXX11_NOEXCEPT
         {
             return *static_cast<T const*>(target());
         }
@@ -378,8 +363,10 @@ namespace eggs { namespace variants { namespace detail
 
     template <typename ...Ts, typename Union>
     struct _storage<pack<Ts...>, Union, true, true>
+      : Union
     {
-    public:
+        using base_type = Union;
+
         EGGS_CXX11_CONSTEXPR _storage() EGGS_CXX11_NOEXCEPT
           : _which{0}
         {}
@@ -392,17 +379,15 @@ namespace eggs { namespace variants { namespace detail
         template <std::size_t I, typename ...Args>
         EGGS_CXX11_CONSTEXPR _storage(
             std::integral_constant<std::size_t, I> which, Args&&... args)
-          : _which{which}
-          , _buffer{which, std::forward<Args>(args)...}
+          : base_type{which, std::forward<Args>(args)...}
+          , _which{which}
         {}
 
         template <std::size_t I, typename ...Args>
-        void emplace(std::integral_constant<std::size_t, I> which, Args&&... args)
+        EGGS_CXX14_CONSTEXPR void emplace(
+            std::integral_constant<std::size_t, I> which, Args&&... args)
         {
-            ::new (target()) typename at_index<
-                I, pack<empty, Ts...>
-            >::type(std::forward<Args>(args)...);
-            _which = which;
+            *this = _storage(which, std::forward<Args>(args)...);
         }
 
 #if EGGS_CXX11_HAS_DEFAULTED_FUNCTIONS
@@ -410,9 +395,11 @@ namespace eggs { namespace variants { namespace detail
         _storage& operator=(_storage&& rhs) = default;
 #endif
 
-        void swap(_storage& rhs)
+        EGGS_CXX14_CONSTEXPR void swap(_storage& rhs)
         {
-            std::swap(*this, rhs);
+            _storage tmp(std::move(*this));
+            *this = std::move(rhs);
+            rhs = std::move(tmp);
         }
 
         EGGS_CXX11_CONSTEXPR std::size_t which() const
@@ -420,19 +407,11 @@ namespace eggs { namespace variants { namespace detail
             return _which;
         }
 
-        EGGS_CXX14_CONSTEXPR void* target()
-        {
-            return _buffer.target();
-        }
-
-        EGGS_CXX11_CONSTEXPR void const* target() const
-        {
-            return _buffer.target();
-        }
+        using base_type::target;
+        using base_type::get;
 
     protected:
         std::size_t _which;
-        Union _buffer;
     };
 
     template <typename ...Ts, typename Union>
@@ -489,8 +468,10 @@ namespace eggs { namespace variants { namespace detail
         void emplace(std::integral_constant<std::size_t, I> which, Args&&... args)
         {
             _which = 0;
-
-            base_type::emplace(which, std::forward<Args>(args)...);
+            ::new (target()) typename at_index<
+                I, pack<empty, Ts...>
+            >::type(std::forward<Args>(args)...);
+            _which = which;
         }
 
         _storage& operator=(_storage const& rhs)
@@ -569,7 +550,6 @@ namespace eggs { namespace variants { namespace detail
 
     protected:
         using base_type::_which;
-        using base_type::_buffer;
     };
 
     template <typename ...Ts, typename Union>
@@ -684,7 +664,6 @@ namespace eggs { namespace variants { namespace detail
 
     protected:
         using base_type::_which;
-        using base_type::_buffer;
     };
 
     template <typename ...Ts>

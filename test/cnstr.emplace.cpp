@@ -29,9 +29,9 @@ TEST_CASE("variant<Ts...>::variant(in_place<I>, Args&&...)", "[variant.cnstr]")
 #if EGGS_CXX11_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(in_place<1>, 42);
+        constexpr eggs::variant<int, Constexpr> v(in_place<1>, 42);
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
-        constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();
     }
 #endif
@@ -58,12 +58,12 @@ TEST_CASE("variant<Ts...>::variant(in_place<I>, std::initializer_list<U>, Args&&
     REQUIRE(v.target<std::string>() != nullptr);
     CHECK(*v.target<std::string>() == "42");
 
-#if EGGS_CXX11_HAS_CONSTEXPR
+#if EGGS_CXX14_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(in_place<1>, {4, 2});
+        constexpr eggs::variant<int, Constexpr> v(in_place<1>, {4, 2});
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
-        constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();
     }
 #endif
@@ -93,9 +93,9 @@ TEST_CASE("variant<Ts...>::variant(in_place<T>, Args&&...)", "[variant.cnstr]")
 #if EGGS_CXX11_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(in_place<Constexpr>, 42);
+        constexpr eggs::variant<int, Constexpr> v(in_place<Constexpr>, 42);
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
-        constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();
     }
 #endif
@@ -112,12 +112,12 @@ TEST_CASE("variant<Ts...>::variant(in_place<T>, std::initializer_list<U>, Args&&
     REQUIRE(v.target<std::string>() != nullptr);
     CHECK(*v.target<std::string>() == "42");
 
-#if EGGS_CXX11_HAS_CONSTEXPR
+#if EGGS_CXX14_HAS_CONSTEXPR
     SECTION("constexpr")
     {
-        static constexpr eggs::variant<int, Constexpr> v(in_place<Constexpr>, {4, 2});
+        constexpr eggs::variant<int, Constexpr> v(in_place<Constexpr>, {4, 2});
+        constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
-        constexpr void const* vt = v.target();
         constexpr std::type_info const& vtt = v.target_type();
     }
 #endif
