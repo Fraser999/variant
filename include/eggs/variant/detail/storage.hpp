@@ -65,13 +65,13 @@ namespace eggs { namespace variants { namespace detail
         EGGS_CXX14_CONSTEXPR T& get(
             std::integral_constant<std::size_t, 0>) EGGS_CXX11_NOEXCEPT
         {
-            return _head;
+            return this->_head;
         }
 
         EGGS_CXX11_CONSTEXPR T const& get(
             std::integral_constant<std::size_t, 0>) const EGGS_CXX11_NOEXCEPT
         {
-            return _head;
+            return this->_head;
         }
 
         template <
@@ -81,7 +81,7 @@ namespace eggs { namespace variants { namespace detail
         EGGS_CXX14_CONSTEXPR U& get(
             std::integral_constant<std::size_t, I>) EGGS_CXX11_NOEXCEPT
         {
-            return _tail.get(std::integral_constant<std::size_t, I - 1>{});
+            return this->_tail.get(std::integral_constant<std::size_t, I - 1>{});
         }
 
         template <
@@ -91,7 +91,7 @@ namespace eggs { namespace variants { namespace detail
         EGGS_CXX11_CONSTEXPR U const& get(
             std::integral_constant<std::size_t, I>) const EGGS_CXX11_NOEXCEPT
         {
-            return _tail.get(std::integral_constant<std::size_t, I - 1>{});
+            return this->_tail.get(std::integral_constant<std::size_t, I - 1>{});
         }
 
     private:
@@ -134,13 +134,13 @@ namespace eggs { namespace variants { namespace detail
         EGGS_CXX14_CONSTEXPR T& get(
             std::integral_constant<std::size_t, 0>) EGGS_CXX11_NOEXCEPT
         {
-            return _head;
+            return this->_head;
         }
 
         EGGS_CXX11_CONSTEXPR T const& get(
             std::integral_constant<std::size_t, 0>) const EGGS_CXX11_NOEXCEPT
         {
-            return _head;
+            return this->_head;
         }
 
         template <
@@ -150,7 +150,7 @@ namespace eggs { namespace variants { namespace detail
         EGGS_CXX14_CONSTEXPR U& get(
             std::integral_constant<std::size_t, I>) EGGS_CXX11_NOEXCEPT
         {
-            return _tail.get(std::integral_constant<std::size_t, I - 1>{});
+            return this->_tail.get(std::integral_constant<std::size_t, I - 1>{});
         }
 
         template <
@@ -160,7 +160,7 @@ namespace eggs { namespace variants { namespace detail
         EGGS_CXX11_CONSTEXPR U const& get(
             std::integral_constant<std::size_t, I>) const EGGS_CXX11_NOEXCEPT
         {
-            return _tail.get(std::integral_constant<std::size_t, I - 1>{});
+            return this->_tail.get(std::integral_constant<std::size_t, I - 1>{});
         }
 
     private:

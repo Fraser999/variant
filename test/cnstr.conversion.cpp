@@ -36,6 +36,10 @@ TEST_CASE("variant<Ts...>::variant(T&&)", "[variant.cnstr]")
         constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr std::type_info const& vtt = v.target_type();
+
+        static constexpr eggs::variant<int, Constexpr> sv(Constexpr(42));
+        constexpr void const* svt = sv.target();
+        constexpr Constexpr const* svtt = sv.target<Constexpr>();
     }
 #endif
 }

@@ -33,6 +33,10 @@ TEST_CASE("variant<Ts...>::variant(in_place<I>, Args&&...)", "[variant.cnstr]")
         constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr std::type_info const& vtt = v.target_type();
+
+        static constexpr eggs::variant<int, Constexpr> sv(in_place<1>, 42);
+        constexpr void const* svt = sv.target();
+        constexpr Constexpr const* svtt = sv.target<Constexpr>();
     }
 #endif
 }
@@ -65,6 +69,10 @@ TEST_CASE("variant<Ts...>::variant(in_place<I>, std::initializer_list<U>, Args&&
         constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr std::type_info const& vtt = v.target_type();
+
+        static constexpr eggs::variant<int, Constexpr> sv(in_place<1>, {4, 2});
+        constexpr void const* svt = sv.target();
+        constexpr Constexpr const* svtt = sv.target<Constexpr>();
     }
 #endif
 }
@@ -97,6 +105,10 @@ TEST_CASE("variant<Ts...>::variant(in_place<T>, Args&&...)", "[variant.cnstr]")
         constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr std::type_info const& vtt = v.target_type();
+
+        static constexpr eggs::variant<int, Constexpr> sv(in_place<Constexpr>, 42);
+        constexpr void const* svt = sv.target();
+        constexpr Constexpr const* svtt = sv.target<Constexpr>();
     }
 #endif
 }
@@ -119,6 +131,10 @@ TEST_CASE("variant<Ts...>::variant(in_place<T>, std::initializer_list<U>, Args&&
         constexpr bool vb = bool(v);
         constexpr std::size_t vw = v.which();
         constexpr std::type_info const& vtt = v.target_type();
+
+        static constexpr eggs::variant<int, Constexpr> sv(in_place<Constexpr>, {4, 2});
+        constexpr void const* svt = sv.target();
+        constexpr Constexpr const* svtt = sv.target<Constexpr>();
     }
 #endif
 }
